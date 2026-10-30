@@ -9,17 +9,14 @@
     (function() {
       var path = window.location.pathname;
 
-      // تحويل تلقائي فوري إذا دخل المستخدم من الرابط السابق الذي يحتوي على /smartedusys/
-      if (path.indexOf('/smartedusys') === 0) {
-        var cleanPath = path.substring('/smartedusys'.length);
-        if (!cleanPath || cleanPath === '/') cleanPath = '/index.html';
-        window.location.replace(cleanPath + window.location.search + window.location.hash);
+      // تحويل تلقائي إذا تم إدخال admin بدون .html
+      if (path.indexOf('admin') !== -1 && path.indexOf('admin.html') === -1) {
+        window.location.replace('./admin.html' + window.location.search + window.location.hash);
         return;
       }
 
-      // تحويل تلقائي إذا تم إدخال /admin بدون .html أو الرابط القديم udaragg
-      if (path === '/admin' || path === '/admin/' || path.indexOf('udaragg') !== -1) {
-        window.location.replace('/admin.html' + window.location.search + window.location.hash);
+      if (!path || path.endsWith('/') || path.indexOf('index') === -1) {
+        window.location.replace('./index.html' + window.location.search + window.location.hash);
         return;
       }
     })();

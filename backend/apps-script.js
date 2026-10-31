@@ -59,7 +59,7 @@ const MAX_LENGTHS = {
   studentName: 60,
   subject: 120,
   details: 2000,
-  className: 10,
+  className: 30,
   whatsapp: 15,
   reply: 1500
 };

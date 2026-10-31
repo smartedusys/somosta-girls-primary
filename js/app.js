@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ============================================================================
  *  نظام الشكاوى والمقترحات المدرسية - المنطق البرمجي للواجهة الأمامية
  *  School Complaint & Suggestion System - Frontend App Logic
@@ -418,6 +418,9 @@ async function submitForm(e) {
 
   const formData = new FormData(form);
   const isEnthusiast = (selectedType === 'مقترح' && selectedSubmitterType === 'مهتم بالتعليم');
+  const nationalIdVal = isEnthusiast ? sanitize(formData.get('nationalId')) : '';
+  const jobTitleVal = isEnthusiast ? sanitize(formData.get('jobTitle')) : '';
+  const baseDetails = sanitize(formData.get('details'));
 
   const payload = {
     action: 'submit',
@@ -426,12 +429,14 @@ async function submitForm(e) {
     parentName: sanitize(formData.get('parentName')),
     whatsapp: sanitize(formData.get('whatsapp')).replace(/\s+/g, ''),
     studentName: isEnthusiast ? 'مهتم بالتعليم' : sanitize(formData.get('studentName')),
-    grade: isEnthusiast ? sanitize(formData.get('jobTitle')) : sanitize(formData.get('grade')),
-    className: isEnthusiast ? sanitize(formData.get('nationalId')) : sanitize(formData.get('className')),
-    nationalId: isEnthusiast ? sanitize(formData.get('nationalId')) : '',
-    jobTitle: isEnthusiast ? sanitize(formData.get('jobTitle')) : '',
+    grade: isEnthusiast ? (jobTitleVal || 'مهتم بالتعليم') : sanitize(formData.get('grade')),
+    className: isEnthusiast ? 'عام' : sanitize(formData.get('className')),
+    nationalId: nationalIdVal,
+    jobTitle: jobTitleVal,
     subject: sanitize(formData.get('subject')),
-    details: sanitize(formData.get('details')),
+    details: isEnthusiast
+      ? `${baseDetails}\n\n---\n📋 بيانات مقدم المقترح (مهتم بالتعليم):\n• الرقم القومي: ${nationalIdVal}\n• الوظيفة الحالية: ${jobTitleVal}`
+      : baseDetails,
     incidentDate: selectedType === 'شكوى' ? formData.get('incidentDate') : ''
   };
 
